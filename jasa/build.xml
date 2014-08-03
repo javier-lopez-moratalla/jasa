@@ -1,0 +1,21 @@
+<project default="build">
+	
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+    <target name="compile" depends="" description="compila las clases">
+        <javac srcdir="src/main/java"
+         destdir="classes"
+         classpath="lib/**"
+         debug="on"/>
+    </target>
+
+	<!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build" depends="compile" description="Tarea que contruye el jar">
+        <jar destfile="dist/jasa.jar"></jar>
+    </target>
+
+
+</project>
