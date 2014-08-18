@@ -43,6 +43,22 @@ public class ScheduleImpl implements Schedule {
 	}
 	
 	@Override
+	public void removeTask(Task task, Date date) {
+	
+		ScheduledTask scheduledTask = new ScheduledTask();
+		scheduledTask.setTask(task);
+		scheduledTask.setScheduledTime(date);
+		
+		synchronized (lockQueue) {
+		
+			queue.remove(scheduledTask);
+		}
+		
+		setNextExecution();
+		
+	}
+	
+	@Override
 	public void start() {
 	
 		while(!isStop()){
