@@ -29,10 +29,20 @@ public class ScheduleImpl implements Schedule {
 	
 	@Override
 	public void addTask(Task task, Date date) {
-				
+		
 		ScheduledTask scheduledTask = new ScheduledTask();
 		scheduledTask.setTask(task);
-		scheduledTask.setScheduledTime(date);
+		
+		if(date ==null){
+		
+			scheduledTask.setScheduledTime(new Date());
+		}
+		else{
+			
+			scheduledTask.setScheduledTime(date);
+		}
+
+		
 		
 		synchronized (lockQueue) {
 		
@@ -60,15 +70,17 @@ public class ScheduleImpl implements Schedule {
 	
 	@Override
 	public void start() {
-	
+			
+		setStop(false);
+		
 		while(!isStop()){
 			
 			Date now = new Date();
 			Date actualNextExecution = getNextExecution();
 			
-			if(actualNextExecution == null){
+			if(actualNextExecution != null){
 				
-				if(now.equals(actualNextExecution)){
+				if(now.getTime() >= actualNextExecution.getTime()){
 					
 					executeNext();
 				}
@@ -86,13 +98,18 @@ public class ScheduleImpl implements Schedule {
 		}
 	}
 	
+	private void setStop(boolean newStop){
+		
+		synchronized (lockStop) {
+			
+			stop = newStop;
+		}
+	}
+	
 	@Override
 	public void stop() {
 	
-		synchronized (lockStop) {
-		
-			stop = true;
-		}		
+		setStop(true);		
 	}
 	
 	private boolean isStop(){
