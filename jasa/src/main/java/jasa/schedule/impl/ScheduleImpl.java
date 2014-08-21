@@ -75,18 +75,26 @@ public class ScheduleImpl implements Schedule {
 		
 		while(!isStop()){
 			
-			Date now = new Date();
-			Date actualNextExecution = getNextExecution();
+			boolean finCiclo = false;
 			
-			if(actualNextExecution != null){
+			while(!finCiclo){
+			
+				Date now = new Date();
+				Date actualNextExecution = getNextExecution();
+
+				finCiclo = true;
 				
-				if(now.getTime() >= actualNextExecution.getTime()){
+				if(actualNextExecution != null){
 					
-					executeNext();
+					if(now.getTime() >= actualNextExecution.getTime()){
+						
+						executeNext();
+						finCiclo = false;
+					}
 				}
+				
+				setNextExecution();
 			}
-			
-			setNextExecution();
 			
 			try{
 				Thread.sleep(RESOLUTION);
